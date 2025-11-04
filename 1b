@@ -1,0 +1,45 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+df = pd.read_csv("housing_prices_SLR.csv", delimiter=',')
+df.head()
+
+x = df[['AREA']].values
+y = df.PRICE.values
+x[:5]
+y[:5]
+
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=100)
+
+print(x_train.shape)
+print(x_test.shape)
+print(x_train.shape)
+print(x_test.shape)
+
+from sklearn.linear_model import LinearRegression
+lr_model = LinearRegression()
+lr_model.fit(x_train, y_train)
+
+print(lr_model.intercept_)
+print(lr_model.coef_)
+
+lr_model = LinearRegression(fit_intercept=False)
+lr_model.fit(x_train, y_train)
+
+print(lr_model.intercept_)
+print(lr_model.coef_)
+
+from sklearn.metrics import r2_score
+y_train
+lr_model.predict(x_train)
+
+r2_score(y_train, lr_model.predict(x_train))
+r2_score(y_test, lr_model.predict(x_test))
+lr_model.score(x_test, y_test)
+
+plt.scatter(x_train[:, 0], y_train, c='red')
+plt.scatter(x_test[:, 0], y_test, c='blue')
+plt.plot(x_train[:, 0], lr_model.predict(x_train), c='y')
