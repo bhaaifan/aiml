@@ -1,9 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-%matplotlib inline
-
-df = pd.read_csv("housing_prices_SLR.csv", delimiter=',')
+df = pd.read_excel("housing_prices_SLR.xlsx")
 df.head()
 
 x = df[['AREA']].values
@@ -43,3 +41,5 @@ lr_model.score(x_test, y_test)
 plt.scatter(x_train[:, 0], y_train, c='red')
 plt.scatter(x_test[:, 0], y_test, c='blue')
 plt.plot(x_train[:, 0], lr_model.predict(x_train), c='y')
+
+plt.show()
