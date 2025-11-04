@@ -1,0 +1,19 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+%matplotlib  inline
+df=pd.read_excel("housing_prices.xlsx")
+df
+df=df.iloc[:,[0,1,2,4]]
+df.head()
+x=df.iloc[:,:3].values
+y=df.iloc[:,3].values
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=100)
+from sklearn.linear_model import LinearRegression
+mlr_model= LinearRegression(fit_intercept=True)
+mlr_model.fit(x_train,y_train)
+print(mlr_model.intercept_)
+print(mlr_model.coef_)
+print(mlr_model.score(x_train,y_train))
+print(mlr_model.score(x_test,y_test))
