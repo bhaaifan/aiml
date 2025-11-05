@@ -1,0 +1,47 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from keras.datasets import mnist
+from keras.models import Sequential
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, LeakyReLU
+from keras.utils import to_categorical
+from sklearn.model_selection import train_test_split
+import keras
+
+(train_X, train_Y), (test_X, test_Y) = mnist.load_data()
+plt.imshow(train_X[0], cmap='gray')
+
+train_X = train_X.reshape(-1, 28, 28, 1).astype('float32') / 255
+test_X = test_X.reshape(-1, 28, 28, 1).astype('float32') / 255
+train_Y = to_categorical(train_Y)
+test_Y = to_categorical(test_Y)
+
+train_X, valid_X, train_Y, valid_Y = train_test_split(train_X, train_Y, test_size=0.2, random_state=13)
+
+model = Sequential([
+    Conv2D(32, (3,3), padding='same', input_shape=(28,28,1)),
+    LeakyReLU(alpha=0.1),
+    MaxPooling2D((2,2), padding='same'),
+    Flatten(),
+    Dense(10, activation='sigmoid')
+])
+
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+history = model.fit(train_X, train_Y, validation_data=(valid_X, valid_Y),
+                    batch_size=64, epochs=3, verbose=1)
+
+test_loss, test_acc = model.evaluate(test_X, test_Y, verbose=0)
+print(f"\nTest Accuracy: {test_acc:.4f}, Test Loss: {test_loss:.4f}")
+
+plt.figure(figsize=(10,4))
+plt.subplot(1,2,1)
+plt.plot(history.history['accuracy'], '--', label='Train Acc')
+plt.plot(history.history['val_accuracy'], 'b', label='Val Acc')
+plt.title('Training vs Validation Accuracy')
+plt.legend()
+
+plt.subplot(1,2,2)
+plt.plot(history.history['loss'], '--', label='Train Loss')
+plt.plot(history.history['val_loss'], 'b', label='Val Loss')
+plt.title('Training vs Validation Loss')
+plt.legend()
+plt.show()
